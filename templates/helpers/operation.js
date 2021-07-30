@@ -53,7 +53,7 @@ const getOperationArgument = operation => {
   if ((method === 'post' || method === 'put') && bodyModel) {
     const bodyModelName = getBodyModelNameInCamelCase(operation);
     if (bodyModelName) {
-      if (hasRequiredParameter(parameters, 'body')) {
+      if (_.get(operation, 'requestBody.content.required')) {
         requiredArgs.push(bodyModelName);
       } else {
         optionalArgs.push(bodyModelName);
@@ -250,7 +250,7 @@ const getOperationArgumentsAndReturnType = operation => {
       const modelPropertiesType = operation.bodyModel === 'string' ?
         operation.bodyModel :  `${operation.bodyModel}${OPTIONS_TYPE_SUFFIX}`;
       args.set(_.camelCase(bodyParamName), {
-        isRequired: hasRequiredParameter(parameters, 'body'),
+        isRequired: _.get(operation, 'requestBody.content.required'),
         type: modelPropertiesType,
       });
     }
